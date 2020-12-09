@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @NoArgsConstructor
 @ToString
@@ -20,6 +21,7 @@ public class Employee {
     private String country;
     private double salary;
     private String doj;
+    private Date date;
 
     public Employee(String name, String country) {
         this.name = name;
