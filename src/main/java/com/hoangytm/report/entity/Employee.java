@@ -1,4 +1,4 @@
-package com.javatechie.report.entity;
+package com.hoangytm.report.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

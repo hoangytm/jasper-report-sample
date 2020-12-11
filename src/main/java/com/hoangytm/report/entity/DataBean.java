@@ -1,4 +1,4 @@
-package com.javatechie.report.entity;
+package com.hoangytm.report.entity;
 
 /**
  * @author PhanHoang

@@ -1,4 +1,4 @@
-package com.javatechie.report.entity;
+package com.hoangytm.report.entity;
 import java.util.ArrayList;
 /**
  * @author PhanHoang
