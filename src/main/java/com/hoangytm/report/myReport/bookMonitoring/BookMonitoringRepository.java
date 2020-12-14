@@ -1,6 +1,5 @@
-package com.hoangytm.report.myReport;
+package com.hoangytm.report.myReport.bookMonitoring;
 
-import com.hoangytm.report.myReport.bookMonitoring.BookMonitoring;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

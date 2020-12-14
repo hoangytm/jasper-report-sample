@@ -1,7 +1,5 @@
-package com.hoangytm.report.myReport;
+package com.hoangytm.report.myReport.efileReport;
 
-import com.hoangytm.report.myReport.bookMonitoring.BookMonitoring;
-import com.hoangytm.report.myReport.bookMonitoring.BookMonitoringDetail;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
@@ -19,36 +17,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author PhanHoang
- * 12/10/2020
+ * 12/11/2020
  */
 @Service
-public class Report {
+public class EfileService {
     @Autowired
-    private BookMonitoringDetailRepository bookMonitoringDetailRepository;
-    @Autowired
-    private BookMonitoringRepository bookMonitoringRepository;
+    private EfileRepository efileRepository;
 
     public void exportReport() throws JRException, IOException {
+        List<Efile> efiles = efileRepository.findAll();
         String path = "C:\\Users\\Dell\\Desktop\\jasper";
-        JasperReport jasperReport = JasperCompileManager.compileReport("C:\\Users\\Dell\\Desktop\\jasper\\newTest.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport("C:\\Users\\Dell\\Desktop\\jasper\\bao_cao\\efile_report.jrxml");
 //        make data source
-        List<BookMonitoringDetail> bookMonitoringDetails = getReportBookMonitor();
-        List<BookMonitoring> bookMonitorings = bookMonitoringRepository.findAllByDocCode("BM");
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(bookMonitorings);
+        List<String> source = Arrays.asList("1");
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(source);
         Map<String, Object> parameters = new HashMap<>();
         File fi = new File("C:\\Users\\Dell\\Desktop\\jasper\\qr.png");
 
         byte[] fileContent = Files.readAllBytes(fi.toPath());
         BufferedImage bufferedImage = ImageIO.read(Files.newInputStream(Paths.get("C:\\Users\\Dell\\Desktop\\jasper\\qr.png")));
         ImageIcon imageIcon = new ImageIcon(new ImageIcon(fileContent).getImage());
-        parameters.put("bookMonitoringDetails", new JRBeanCollectionDataSource(bookMonitoringDetails));
+        parameters.put("efiles", new JRBeanCollectionDataSource(efiles));
         parameters.put("efileCode", "BÁO CÁO TỔNG HỢP HỒ SƠ ĐÃ HỦY");
         parameters.put("imageIcon", bufferedImage);
         parameters.put("payer", "create by hoang");
@@ -58,7 +51,7 @@ public class Report {
         simplePdfExporterConfiguration.setMetadataAuthor("TheGeekyAsian");
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 //        export the pdf file
-        JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\employees.pdf");
+        JasperExportManager.exportReportToPdfFile(jasperPrint, path + "\\employee.pdf");
 
         JRXlsExporter exporter = new JRXlsExporter();
         exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -72,18 +65,6 @@ public class Report {
         exporter.setConfiguration(configuration);
 //        export  excel file
         exporter.exportReport();
-    }
-
-    public List<BookMonitoringDetail> getReportBookMonitor() {
-        List<BookMonitoring> lstBookMonitoring = bookMonitoringRepository.findAllByDocCode("BM");
-        List<BookMonitoringDetail> bookMonitoringDetails = new ArrayList<>();
-        lstBookMonitoring.forEach(r -> {
-            BookMonitoringDetail bookMonitoringDetail = bookMonitoringDetailRepository.findBookMonitoringDetailByBookMonitoringId(r.getId());
-            bookMonitoringDetails.add(bookMonitoringDetail);
-        });
-
-
-        return bookMonitoringDetails;
     }
 
 }
